@@ -1,0 +1,181 @@
+{
+    // --- VS Code Looking ---
+    "workbench.colorCustomizations": {
+        "editor.background": "#111",
+        "editorGutter.background": "#222",
+        "sideBar.background": "#111",
+        "activityBar.background": "#222",
+        // "editor.selectionBackground": "#222",
+        // "editor.lineHighlightBackground": "#000",
+        "tab.activeBackground": "#111",
+        "tab.inactiveBackground": "#222",
+    },
+
+    // --- Vim Customization ---
+    "vim.easymotion": true,
+    "vim.incsearch": true,
+    "vim.useSystemClipboard": true,
+    "vim.useCtrlKeys": true,
+    // "vim.hlsearch": true,
+    // "vim.insertModeKeyBindings": [
+    //   {
+    //     "before": ["j", "j"],
+    //     "after": ["<Esc>"]
+    //   }
+    // ],
+    // "vim.normalModeKeyBindingsNonRecursive": [
+    //     {
+    //         "before": ["<leader>", "d"],
+    //         "after": ["d", "d"]
+    //     },
+    //     {
+    //         "before": ["<C-n>"],
+    //         "commands": [":nohl"]
+    //     },
+    //     {
+    //         "before": ["d"],
+    //         "after": [ "\"", "_", "d" ]
+    //     },
+    //             {
+    //         "before": ["D"],
+    //         "after": [ "\"", "_", "D" ]
+    //     },
+    //     {
+    //         "before": ["x"],
+    //         "after": [ "\"", "_", "x" ]
+    //     },
+    //     {
+    //         "before": ["X"],
+    //         "after": [ "\"", "_", "X" ]
+    //     },
+    //     {
+    //         "before": ["s"],
+    //         "after": [ "\"", "_", "s" ]
+    //     },
+    //     {
+    //         "before": [""],
+    //         "after": [ "\"", "_", "ciw" ]
+    //     }
+    // ],
+    // "vim.leader": "<space>",
+    // "vim.handleKeys": {
+    //   "<C-a>": false,
+    //   "<C-f>": false
+    // },
+    "editor.lineNumbers": "relative",
+    "vim.hlsearch": true,
+    "vim.leader": ",",
+    "vim.insertModeKeyBindings": [
+    {
+        "before": ["j", "j"],
+        "after": ["<Esc>"]
+    },
+    {
+        "before": [",", "."],
+        "after": ["<Esc>"]
+    },
+    ],
+    "vim.normalModeKeyBindingsNonRecursive": [
+        {
+          "before": ["<space>"],
+          "commands": ["workbench.action.files.save"]
+        },
+        {
+          "before": ["<leader>", "<space>"],
+          "commands": [":nohl"]
+        },
+        {
+          "before": ["<leader>", "w"],
+          "commands": ["workbench.action.splitEditor"]
+        },
+        {
+          "before": ["<leader>", "t"],
+          "commands": ["workbench.action.toggleSidebarVisibility"]
+        },
+        {
+            "before": ["<leader>", "c"],
+            "commands": [
+                "editor.action.commentLine",
+            ],
+        },
+        {
+            "before": ["<leader>", "f"],
+            "commands": [
+                "revealInExplorer",
+            ],
+        },
+        {
+            "before": ["<leader>", "r", "e"],
+            "commands": [
+                "editor.action.rename"
+            ]
+        },
+        {
+            "before": ["<leader>", "r", "f"],
+            "commands": [
+                "fileutils.renameFile"
+            ]
+        },
+        {
+            "before": ["<leader>", "o", "g"],
+            "commands": [
+                "workbench.action.showAllSymbols"
+            ]
+        },
+        {
+            "before": ["<leader>", "o", "o"],
+            "commands": [
+                "workbench.action.showEditorsInActiveGroup"
+            ]
+        },
+        {
+            "before": ["<leader>", "o", "p"],
+            "commands": [
+                "workbench.action.quickOpen"
+            ]
+        }
+    ],
+    "vim.visualModeKeyBindings": [
+        {
+            "before": ["<leader>", "c"],
+            "commands": [
+                "editor.action.commentLine",
+                "extension.vim_escape"
+            ],
+        }
+    ],
+    "editor.fontLigatures": true,
+    "editor.renderWhitespace": "boundary",
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+            {
+                "scope":"punctuation.separator",
+                "settings": {
+                    "foreground": "#fbf700fd",
+                    "fontStyle": "bold"
+                }
+            }
+        ]
+    },
+    "editor.suggestSelection": "first",
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+    "vim.vimrc.enable": true,
+
+
+
+    // Cmake
+    "cmake.cmakePath": "/usr/bin/cmake",
+    "workbench.editorAssociations": {
+        "*.ipynb": "jupyter.notebook.ipynb"
+    },
+    "python.languageServer": "Microsoft",
+    "workbench.colorTheme": "Visual Studio Dark - C++",
+    "cmake.configureOnOpen": true,
+    "jupyter.interactiveWindowMode": "perFile",
+    // "editor.fontFamily": "Consolas",
+    "editor.fontFamily": "Monaco",
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.python"
+    },
+    "python.formatting.provider": "black"
+}
