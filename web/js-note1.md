@@ -410,3 +410,348 @@ user.sayHi(); // Ilya
 Take a look at [here](https://javascript.info/object-methods#tasks).
 
 
+## [Constructor Function and `new` operator](https://javascript.info/constructor-new#create-new-accumulator)
+
+Ctor function sebenernya yaaa cuman function pada umumnya, tapi fungsi nya untuk men-construct suatu object.
+Ini kayak `class` tapi lebih simple.
+
+> Belum baca baca lebih tentang `class` di js itu seperti apa, tapi secara kasat mata, `class` di js itu rada mirip kayak `class` di C++.
+
+```js
+function User(name) {       // function ctor
+  this.name = name;
+  this.isAdmin = false;
+}
+
+let user = new User("Jack");
+
+alert(user.name); // Jack
+alert(user.isAdmin); // false
+```
+
+Ctor function yang langsung di-assign kan ke suatu object:
+```js
+// create a function and immediately call it with new
+let user = new function() {
+    this.name = "John";
+    this.isAdmin = false;
+
+    // ...other code for user creation
+    // maybe complex logic and statements
+    // local variables etc
+};
+```
+
+### Ctor `new` keyword test
+
+Intinya, ini mengetest kalo ada misalnya ada object yang di-assign ke function ctor tanpa `new` operator. Cukup menarik, cuman kayaknya daripada pakek ctor func, mungkin mendingan pakek `class` ... Yaa mungkin begitu. Baca - baca aja [disini](https://javascript.info/constructor-new#constructor-mode-test-new-target).
+
+### `return` from constructor
+
+Ini cukup aneh, constructor kok bisa me-return seseuatu ???. Kata si penulis juga `return` pada ctor ini cukup jarang sekali digunakan.
+
+### Omitting parentheses
+
+Omitting parentheses ini hanya bisa dilakukan jika ctor function tidak punya argumen.
+```js
+let user = new User; // <-- no parentheses
+// same as
+let user = new User();
+```
+
+### Method in Constructor Function
+
+```js
+function User(name) {
+  this.name = name;
+
+  this.sayHi = function() {
+    alert( "My name is: " + this.name );
+  };
+}
+
+let john = new User("John");
+
+john.sayHi(); // My name is: John
+
+/*
+john = {
+   name: "John",
+   sayHi: function() { ... }
+}
+*/
+```
+
+
+## [Optional Chaining `.?`](https://javascript.info/optional-chaining)
+
+The optional chaining ?. syntax has three forms:
+
+- `obj?.prop` – returns `obj.prop` if `obj` exists, otherwise undefined.
+    ```js
+    let user = null;
+    alert( user?.address ); // undefined
+    alert( user?.address.street ); // undefined
+    ```
+- `obj?.[prop]` – returns `obj[prop]` if `obj` exists, otherwise undefined.
+    ```js
+    let key = "firstName";
+
+    let user1 = {
+    firstName: "John"
+    };
+
+    let user2 = null;
+
+    alert( user1?.[key] ); // John
+    alert( user2?.[key] ); // undefined
+    ```
+- `obj.method?.()` – calls `obj.method()` if `obj.method` exists, otherwise returns undefined.
+    ```js
+    let userAdmin = {
+        admin() {
+            alert("I am admin");
+        }
+    };
+
+    let userGuest = {};
+
+    userAdmin.admin?.(); // I am admin
+    userGuest.admin?.(); // nothing (no such method)
+    ```
+
+The `delete` also work in this:
+```js
+delete user?.name; // delete user.name if user exists
+```
+
+Optional chaining `?.` can NOT be used as _lvalue_:
+```js
+let user = null;
+
+user?.name = "John"; // Error, doesn't work
+// because it evaluates to undefined = "John"
+```
+
+As we can see, all of them are straightforward and simple to use. The ?. checks the left part for null/undefined and allows the evaluation to proceed if it’s not so.
+
+A chain of `?.` allows to safely access nested properties:
+```js
+let user = {}; // user has no address
+alert( user?.address?.street ); // undefined (no error)
+```
+
+Still, we should apply `?.` carefully, only where it’s acceptable that the left part doesn’t exist. So that it won’t hide programming errors from us, if they occur.
+
+
+## [Symbol type](https://javascript.info/symbol)
+
+Object _key_ hanya boleh _symbol_ atau _string_.
+
+```js
+// ..+ id is a new symbol (Tanpa deskripsi) +..
+let id = Symbol();
+
+// ..+ id is a symbol (Dengan description "id") +..
+let id = Symbol("id");
+
+// ..+
+let id = Symbol("id");
+
+let user = {
+  name: "John",
+  [id]: 123,
+};
+
+// ..+ The are no way the object can have the same value + ..
+let id1 = Symbol("id");
+let id2 = Symbol("id");
+
+alert(id1 == id2); // false
+
+// ..+ 
+let id = Symbol("id");
+alert(id); // TypeError: Cannot convert a Symbol value to a string
+
+// ..+
+let id = Symbol("id");
+alert(id.toString()); // Symbol(id), now it works
+
+// ..+
+let id = Symbol("id");
+alert(id.description); // id
+```
+
+### Hidden Properties
+
+Symbol memiliki sifat _hidden_ jika digunakan sebagai _properties_ pada suatu object.
+Sifat hidden ini bertujuan agar, misalnya:
+
+- Si A ingin menambahkan suatu properties pada suatu object javascript librari. Namun karena object librari tersebut cukup kompleks dan Si A tidak ingin berurusan dengan code internal dari object tersebut, maka Si A dapat menggunakan _symbol_ sebagai properties pada object librari tersebut. Hal ini bertujuan agar menghindari _overwrite_ nama properties pada object tersebut.
+- Si B dan Si C, bekerjasama membuat suatu object. Keduanya mengetes dan menambahkan fitur - fitur pada object tersebut. Si B dan Si C menambahkan properties bernama `id`. Dalam branch masing - masing, keduanya mengetes dan menambahkan method lainnya yang berhubungan dengan `id` tersebut. Ketika mereka berdua merasa method tentang `id` sudah cukup, maka mereka melakukan _merging_ branch. Agar `id` disini tidak konflik, mereka menggunakan _symbol_. Setelah beberapa bulan ternyata fitur yang ada pada `id` nya Si C lebih berguna daripada `id` nya Si B. Si `B` pun menghapus `id` nya tersebut, kemudian Si C menambahkan nama `"id"` (bukan `id` symbol) sebagai properti resmi dari object yang dikembangkan oleh Si B dan Si C tersebut. Jika Si B dan Si C pada awalnya tidak menggunakan `id` sebagai symbol, maka yang ternjadi adalah:
+  ```js
+  let user = { name: "John" };
+
+  // Si B script uses "id" property
+  user.id = "Si B id value";
+
+  // ...Another script also wants "id" for its purposes...
+
+  user.id = "Si C id value"
+  // Boom! overwritten by another script!
+  ```
+
+#### Symbol are skipped by for..in
+
+```js
+let id = Symbol("id");
+let user = {
+  name: "John",
+  age: 30,
+  [id]: 123
+};
+
+for (let key in user) alert(key); // name, age (NO SYMBOL)
+
+// the direct access by the symbol works
+alert( "Direct: " + user[id] );
+```
+
+#### `object.assign()`
+
+```js
+let id = Symbol("id");
+let user = {
+  [id]: 123
+};
+
+let clone = Object.assign({}, user);  // It's Also COPYING SYMBOL
+
+alert( clone[id] ); // 123
+```
+
+### Global Symbol
+
+Global symbol ini kayak symbol yang pakek hash map yang sama:
+```js
+// read from the global registry
+let id = Symbol.for("id"); // if the symbol did not exist, it is created
+
+// read it again (maybe from another part of the code)
+let idAgain = Symbol.for("id");
+
+// the same symbol
+alert( id === idAgain ); // true
+```
+
+#### `Symbol.keyFor()`
+
+```js
+// get symbol by name
+let sym = Symbol.for("name");   // global symbol
+let sym2 = Symbol.for("id");    // global symbol
+let sym3 = Symbol("address");   // local symbol
+
+// get name by symbol
+alert( Symbol.keyFor(sym) );    // name
+alert( Symbol.keyFor(sym2) );   // id
+alert( Symbol.keyFor(sym3) );   // undefined
+```
+
+### System Symbol
+
+There are many system symbols used by JavaScript which are accessible as `Symbol.*`. We can use them to alter some built-in behaviors. For instance, later in the tutorial we’ll use `Symbol.iterator` for [iterables](https://javascript.info/iterable), `Symbol.toPrimitive` to setup [object-to-primitive conversion](https://javascript.info/object-toprimitive) and so on.
+
+### Is Symbol really hidden ?
+
+Technically, symbols are not 100% hidden. There is a built-in method `Object.getOwnPropertySymbols(obj)` that allows us to get all symbols. Also there is a method named `Reflect.ownKeys(obj)` that returns all keys of an object including symbolic ones. So they are not really hidden. _But most libraries, built-in functions and syntax constructs don’t use these methods_.
+
+
+## [Object to Primitive conversion](https://javascript.info/object-toprimitive)
+
+Kebanyakan fungsi output seperti `alert` dan operator math, concatenate, dll. hanya bekerja pada _primitive type_.
+Sehingga, jika _object_ dimasukkan ke fungsi fungsi dan operator tersebut, maka diperlukan suatu fungsi khusus untuk memberitahu javascript bagaimana cara memperlakukan _object_ ini jika dimasukkan ke fungsi atau operator yang ada.
+
+> Kalo di C++, ini kayak kita ngebuat _operator overloading_. Cuman operator overloading ini ditujukan untuk object type, bukan class.
+
+There are 3 types (hints) of it:
+- `"string"` (for alert and other operations that need a string)
+- `"number"` (for maths)
+- `"default"` (few operators)
+
+The conversion algorithm is:
+
+1. Call `obj[Symbol.toPrimitive](hint)` if the method exists.
+2. Otherwise if hint is `"string"`
+    - try `obj.toString()` and `obj.valueOf()`, whatever exists.
+3. Otherwise if hint is `"number"` or `"default"`
+    - try `obj.valueOf()` and `obj.toString()`, whatever exists.
+
+`obj[Symbol.toPrimitive](hint)` demo:
+```js
+let user = {
+    name: "John",
+    money: 1000,
+
+    [Symbol.toPrimitive](hint) {
+    alert(`hint: ${hint}`);
+    return hint == "string" ? `{name: "${this.name}"}` : this.money;
+    }
+};
+
+// conversions demo:
+alert(user); // hint: string -> {name: "John"}
+alert(+user); // hint: number -> 1000
+alert(user + 500); // hint: default -> 1500
+```
+
+`obj.toString() and `obj.valueOf()` demo:
+```js
+let user = {
+  name: "John",
+  money: 1000,
+
+  // for hint="string"
+  toString() {
+    return `{name: "${this.name}"}`;
+  },
+
+  // for hint="number" or "default"
+  valueOf() {
+    return this.money;
+  }
+
+};
+
+alert(user); // toString -> {name: "John"}
+alert(+user); // valueOf -> 1000
+alert(user + 500); // valueOf -> 1500
+```
+
+Pada kebanyakan kasus, sebenernya ngimplementasiin `obj.toString()` aja udah cukup:
+```js
+let user = {
+  name: "John",
+
+  toString() {
+    return this.name;
+  }
+};
+
+alert(user); // toString -> John
+alert(user + 500); // toString -> John500
+```
+
+Further Conversion:
+```js
+let obj = {
+  // toString handles all conversions in the absence of other methods
+  toString() {
+    return "2";
+  }
+};
+
+alert(obj + 2); // 22 ("2" + 2), conversion to primitive returned a string => concatenation
+alert(obj * 2); // 4, object converted to primitive "2", then multiplication made it a number
+```
+
