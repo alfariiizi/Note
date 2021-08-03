@@ -189,3 +189,20 @@ To compare arrays, don’t use the `==` operator (as well as `>`, `<` and others
 Instead you can use _for..of_ loop to compare arrays item-by-item.
 
 We will continue with arrays and study more methods to add, remove, extract elements and sort arrays in the next chapter [Array methods](https://javascript.info/array-methods).
+
+
+## Array Methods
+
+Just use the summary as cheatsheet 😂.
+
+
+## Iterables
+
+Again, the summary :3
+
+
+## Map and Set
+
+- `Map` ini kayak *unordered_map* dari c++.
+- `Set` ini kayak *array* tapi cuman nyimpen (storing) unique value.
+
